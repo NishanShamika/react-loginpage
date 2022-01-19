@@ -1,14 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Loginform from "./component/loginform";
+import Loginform from "./component/LoginForm";
 import Home from "./component/Home";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Loginform />} exact />
-        <Route path="/home" element={<Home />} exact />
+        <Route exact path="/home" element={<Home />} />
+        <Route path="/" element={<Loginform />} />
       </Routes>
     </Router>
   );
