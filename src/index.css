@@ -118,3 +118,6 @@ body {
   text-transform: uppercase;
   cursor: pointer;
 }
+.error{
+  color: red;
+}
