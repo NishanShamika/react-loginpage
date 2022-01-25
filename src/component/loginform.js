@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const LoginForm = () => {
   let navigate = useNavigate();
 
-  const adminUser = {
-    username: "admin",
-    password: "password",
-  };
-
   const [values, setValues] = useState({
-    username: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
-  const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState(null);
 
   const handleChange = (event) => {
     setValues({
@@ -25,33 +21,26 @@ const LoginForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setErrors(validate(values));
-  };
+    setMessage(null);
 
-  const validate = (values) => {
-    const error = {};
-
-    if (
-      values.username === adminUser.username &&
-      values.password === adminUser.password
-    ) {
-      navigate("/Home", {
-        state: { username: values.username /*password: password*/ },
-      });
+    if (!values.email || !values.password) {
+      setMessage('Email and Password required');
+    } else {
+      axios
+        .post('http://restapi.adequateshop.com/api/authaccount/login', values)
+        .then((response) => {
+          console.log(response);
+          setMessage(response.data.message);
+          if (response.data.message == 'success') {
+            navigate('/Home', {
+              state: {
+                username: response.data.data.Name,
+                /* password: password */
+              },
+            });
+          }
+        });
     }
-
-    if (!values.username) {
-      error.username = "Username is required";
-    } else if (values.username !== adminUser.username) {
-      error.username = "Username is Incorrect";
-    }
-
-    if (!values.password) {
-      error.password = "Password is required";
-    } else if (values.password !== adminUser.password) {
-      error.password = "Username is Incorrect";
-    }
-    return error;
   };
 
   return (
@@ -63,15 +52,16 @@ const LoginForm = () => {
         <div className="form-content">
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="username">Username</label>
+              <label className="username">Email</label>
               <input
                 type="text"
-                name="username"
-                value={values.username}
+                name="email"
+                value={values.email}
                 onChange={handleChange}
               />
             </div>
-            <p className="error">{errors.username}</p>
+
+            {values.username && <div>{values.username}</div>}
             <div className="form-group">
               <label className="password">Password</label>
               <input
@@ -81,7 +71,8 @@ const LoginForm = () => {
                 onChange={handleChange}
               />
             </div>
-            <p className="error">{errors.password}</p>
+            {message && <div className="error">{message}</div>}
+            <br />
             <div className="form-group">
               <label className="form-remember">
                 <input type="checkbox" />

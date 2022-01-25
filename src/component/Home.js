@@ -1,10 +1,10 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 const Home = () => {
   let navigate = useNavigate();
-  let location = useLocation();
+  const location = useLocation();
   console.log(location);
 
   return (
@@ -19,7 +19,7 @@ const Home = () => {
         <button
           className="home-button"
           type="submit"
-          onClick={() => navigate("/")}
+          onClick={() => navigate('/')}
         >
           Log Out
         </button>
